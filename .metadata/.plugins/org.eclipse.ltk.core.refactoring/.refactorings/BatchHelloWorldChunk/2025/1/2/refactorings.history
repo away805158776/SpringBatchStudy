@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;BatchConfig.java&apos; to &apos;BatchRetryChunk/src/main/java/com.example.demo&apos;&#x0D;&#x0A;- Original project: &apos;BatchHelloWorldChunk&apos;&#x0D;&#x0A;- Destination element: &apos;BatchRetryChunk/src/main/java/com.example.demo&apos;&#x0D;&#x0A;- Original element: &apos;com.example.demo.config.BatchConfig.java&apos;" description="Copy compilation unit" destination="=BatchRetryChunk/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.example.demo" element1="/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.example.demo.config{BatchConfig.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1736057791665" units="1" version="1.0"/>
+</session>

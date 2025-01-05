@@ -1,0 +1,33 @@
+package com.example.demo.config;
+
+import org.springframework.batch.core.ItemProcessListener;
+import org.springframework.batch.core.ItemReadListener;
+import org.springframework.batch.core.ItemWriteListener;
+import org.springframework.batch.item.ItemProcessor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Configuration;
+
+import com.example.demo.domain.model.Employee;
+
+@Configuration
+public abstract class BaseConfig {
+	
+	@Autowired
+	@Qualifier("GenderConvertProcessor")
+	protected ItemProcessor<Employee, Employee> genderGenderConvertProcessor;
+	
+	@Autowired
+	protected ItemReadListener<Employee> readListener;
+	
+	@Autowired
+	protected ItemProcessListener<Employee, Employee> processListener;
+	
+	@Autowired
+	protected ItemWriteListener<Employee> writeListener;
+
+	@Autowired
+	protected SampleProperty property;
+	
+	
+}

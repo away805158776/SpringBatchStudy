@@ -1,0 +1,3 @@
+spring.application.name=BatchBranch
+batch.branch.value=0
+spring.batch.job.name=TaskletBranchJob

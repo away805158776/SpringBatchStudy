@@ -1,0 +1,2 @@
+spring.application.name=BatchRetryChunk
+retry.num=3

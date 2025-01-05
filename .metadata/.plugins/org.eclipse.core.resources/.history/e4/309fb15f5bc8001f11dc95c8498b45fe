@@ -1,0 +1,59 @@
+package com.example.demo.config;
+
+import javax.sql.DataSource;
+
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
+import org.springframework.batch.item.database.JdbcBatchItemWriter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import com.example.demo.domain.model.Employee;
+
+@Configuration
+public class JdbcImportBatchConfig extends BaseConfig {
+	@Autowired
+	private DataSource dataSource;
+	
+	private static final String INSERT_EMPLOYEE_SQL = "INSERT INTO employee(id, name, age, gender)" + "VALUES(:id, :name, :age, :gender)";
+	
+	@Bean
+	@StepScope
+	public JdbcBatchItemWriter<Employee> jdbcWriter(){
+		
+		BeanPropertyItemSqlParameterSourceProvider<Employee> provider = new BeanPropertyItemSqlParameterSourceProvider<>;
+		
+		rerurn new JdbcBatchItemWriteBuilder<Employee>()
+		.itemSqlParameterSourceProvider(provider)
+		.sql(INSERT_EMPLOYEE_SQL)
+		.dataSource(this.dataSource)
+		.build();
+	}
+	
+	@Bean
+	Step csvImportJdbcStep() {
+		return new StepBuilder("CsvImportJdbcStep")
+				.<Employee, Employee>chunk(10)
+				.reader(csvReader())
+				.listener(this.readListener)
+				.processor(genderGenderConvertProcessor)
+				.listener(this.processListener)
+				.writer(jdbcWriter())
+				.listener(this.writeListener)
+				.build();
+	}
+	
+	@Bean
+	Job csvImportJdbcJob() {
+		return new jobBuilder("CsvImportJdbcJob")
+				.incrementer(new RunIdIncrementer())
+				.start(csvImportJdbcStep())
+				.build();
+	}
+
+}

@@ -1,0 +1,43 @@
+package com.example.demo.config;
+
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.batch.MyBatisBatchItemWriter;
+import org.mybatis.spring.batch.builder.MyBatisBatchItemWriterBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import com.example.demo.domain.model.Employee;
+
+@Configuration
+public class MyBatisImportBatchConfig extends BaseConfig {
+	
+	@Autowired
+	private SqlSessionFactory sqlSessionFactory;
+	
+	@Bean
+	MyBatisBatchItemWriter<Employee> mybatisWriter(){
+		return new MyBatisBatchItemWriterBuilder<Employee>()
+				.sqlSessionFactory(sqlSessionFactory)
+				.statementId("com.example.demo.repository.EmployeeMapper.insertOne")
+				.build();
+	}
+	
+	@Bean
+	Step csvImportMybatisStep() {
+		return new StepBuilder("CsvImportMybatisStep")
+				.<Employee, Employee>chunk(10)
+				.reder(csvReader()).listener(this.readListener)
+				.processor(compositeProcessor()).listener(this.processListener)
+				.writer(mybatisWriter()).listener(this.writeListener)
+				.build();
+	}
+	
+	@Bean
+	Job csvImportMybatisJob() {
+		return new JobBuilder("CsvImportMybatisJob")
+				.incrementer(new RunIdIncrementer())
+				.start(csvImportMybatisStep())
+				.build();
+	}
+}

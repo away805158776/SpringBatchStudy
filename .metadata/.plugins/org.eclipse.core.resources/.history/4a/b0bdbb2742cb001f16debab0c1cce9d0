@@ -1,0 +1,78 @@
+package com.example.demo.config;
+
+import org.springframework.batch.core.ExitStatus;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.Step;
+import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.core.step.tasklet.Tasklet;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.PlatformTransactionManager;
+
+import com.example.demo.listener.TaskletStepListener;
+
+@Configuration
+public class BatchConfig {
+
+	@Autowired
+	@Qualifier("FirstTasklet")
+	private Tasklet firstTasklet;
+
+	@Autowired
+	@Qualifier("SuccessTasklet")
+	private Tasklet successTasklet;
+	
+	@Autowired
+	@Qualifier("FailTasklet")
+	private Tasklet failTasklet;
+	
+	@Autowired
+	@Qualifier("TaskletStepListener")
+	private TaskletStepListener taskletStepListener;
+	
+	@Bean
+	Step firstStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+		return new StepBuilder("FirstStep", jobRepository)
+				.tasklet(firstTasklet, transactionManager)
+				.listener(taskletStepListener)
+				.build();
+	}
+	
+	@Bean
+	Step successStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+		return new StepBuilder("SuccessStep", jobRepository)
+				.tasklet(successTasklet, transactionManager)
+				.build();
+	}
+	
+	@Bean
+	Step failStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+		return new StepBuilder("FailStep", jobRepository)
+				.tasklet(failTasklet, transactionManager)
+				.build();
+	}
+	
+
+	@Bean
+	Job taskletBranchJob(JobRepository jobRepository, 
+			PlatformTransactionManager transactionManager,
+			Step firstStep,
+			Step successStep,
+			Step failStep) throws Exception{
+		return new JobBuilder("TaskletBranchJob", jobRepository)
+				.incrementer(new RunIdIncrementer())
+				.start(firstStep)
+				 .on(ExitStatus.COMPLETED.getExitCode())
+				 .to(successStep)
+				.from(firstStep)
+				 .on(ExitStatus.FAILED.getExitCode())
+				 .to(failStep)
+				 .end()
+				.build();
+	}		
+}

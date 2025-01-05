@@ -1,0 +1,79 @@
+package com.example.demo.config;
+
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.core.step.tasklet.Tasklet;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.PlatformTransactionManager;
+
+@Configuration
+@EnableBatchProcessing
+public class BatchConfig {
+	@Autowired
+	private JobBuilder jobBuilder;
+
+	@Autowired
+	private StepBuilder stepBuilder;
+	
+//	@Autowired
+//	@Qualifier("HelloTasklet")
+//	private Tasklet helloTasklet;
+//
+//	@Autowired
+//	@Qualifier("HelloTasklet2")
+//	private Tasklet helloTasklet2;
+
+	@Bean
+	public Step taskletStep1(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+		return new stepBuilder("HelloTaskletStep1", jobRepository)
+				.tasklet(helloTasklet1)
+				.build();
+	}
+	
+	@Bean
+	public Step taskletStep2(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+		return new stepBuilder("HelloTaskletStep2", jobRepository)
+				.tasklet(helloTasklet2)
+				.build();
+	}
+	
+	@Bean
+	public Job taskletJob(JobRepository jobRepository, PlatformTransactionManager transactionManager, Step taskletStep1, Step taskletStep2) throws Exception{
+		return new jobBuilder("HelloWorldTaskletJob", jobRepository)
+				.incrementer(new RunIdIncrementer())
+				.start(taskletStep1())
+				.start(taskletStep2())
+				.build();
+	}
+	
+	
+//	 @Bean
+//	    Step chunkStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+//			return new StepBuilder("HelloChunkStep", jobRepository)
+//					.<String, String>chunk(3, transactionManager)
+//					.reader(reader)
+//					.processor(processor)
+//					.writer(writer)
+//					.listener(stepListener)
+//					.build();
+//		}
+//	    
+//
+//	    @Bean
+//	    Job chunkJob (JobRepository jobRepository, PlatformTransactionManager transactionManager, Step chunkStep) throws Exception{
+//			return new JobBuilder("HelloWorldChunkJob", jobRepository)
+//					.incrementer(new RunIdIncrementer())
+//					.start(chunkStep)
+//					.listener(jobListener)
+//					.build();
+//		}
+//	
+	
+}

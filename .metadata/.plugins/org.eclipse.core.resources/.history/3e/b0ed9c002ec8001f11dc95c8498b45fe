@@ -1,0 +1,6 @@
+package com.example.demo.property;
+
+public class SampleProperty {
+	@Value("${sample.property}")
+	private String sampleProperty;
+}

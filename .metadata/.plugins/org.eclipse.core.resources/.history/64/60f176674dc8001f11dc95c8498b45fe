@@ -1,0 +1,9 @@
+package com.example.demo.config;
+
+import org.springframework.beans.factory.annotation.Value;
+
+
+public class SampleProperty {
+	@Value("${csv.path}")
+	private String csvPath;
+}

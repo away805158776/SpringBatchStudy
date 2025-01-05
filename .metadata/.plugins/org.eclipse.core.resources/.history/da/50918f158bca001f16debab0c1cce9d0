@@ -1,0 +1,19 @@
+package com.example.demo.config;
+
+import java.io.File;
+
+public class SampleProperty {
+	
+	@Value("${file.name}")
+	private String fileName;
+	
+	@Value("${file.output.drectory}")
+	private String fileOutputDirectory;
+	
+	public String outputPath() {
+		String outputPath = fileOutputDirectory + File.separator + fileName;
+		log.debug("outputPath={}", outputPath);
+		return outputPath;
+	}
+
+}

@@ -1,0 +1,50 @@
+package com.example.demo.config;
+
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.batch.MyBatisBatchItemWriter;
+import org.mybatis.spring.batch.builder.MyBatisBatchItemWriterBuilder;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.Step;
+import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.PlatformTransactionManager;
+
+import com.example.demo.domain.model.Employee;
+
+@Configuration
+public class MyBatisImportBatchConfig extends BaseConfig {
+	
+	@Autowired
+	private SqlSessionFactory sqlSessionFactory;
+	
+	@Bean
+	MyBatisBatchItemWriter<Employee> mybatisWriter(){
+		return new MyBatisBatchItemWriterBuilder<Employee>()
+				.sqlSessionFactory(sqlSessionFactory)
+				.statementId("com.example.demo.repository.EmployeeMapper.insertOne")
+				.build();
+	}
+	
+	@Bean
+	Step csvImportMybatisStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+		return new StepBuilder("CsvImportMybatisStep", jobRepository)
+				.<Employee, Employee>chunk(10)
+				.reder(csvReader()).listener(this.readListener)
+				.processor(compositeProcessor()).listener(this.processListener)
+				.writer(mybatisWriter()).listener(this.writeListener)
+				.build();
+	}
+	
+	@Bean
+	Job csvImportMybatisJob(JobRepository jobRepository, PlatformTransactionManager transactionManager, Step csvImportMybatisStep) {
+		return new JobBuilder("CsvImportMybatisJob", jobRepository)
+				.incrementer(new RunIdIncrementer())
+				.start(csvImportMybatisStep)
+				.build();
+	}
+}

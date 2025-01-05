@@ -1,0 +1,90 @@
+package com.example.demo.config;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParametersValidator;
+import org.springframework.batch.core.Step;
+import org.springframework.batch.core.job.CompositeJobParametersValidator;
+import org.springframework.batch.core.job.DefaultJobParametersValidator;
+import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.core.step.tasklet.Tasklet;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.PlatformTransactionManager;
+
+import com.example.demo.validator.OptionalValidator;
+import com.example.demo.validator.RequiredValidator;
+
+@Configuration
+public class BatchConfig {
+
+	@Autowired
+	@Qualifier("HelloTasklet")
+	private Tasklet helloTasklet;
+
+	@Autowired
+	@Qualifier("HelloTasklet2")
+	private Tasklet helloTasklet2;
+
+    @Bean
+    JobParametersValidator defaultValidator() {
+		DefaultJobParametersValidator validator = new DefaultJobParametersValidator();
+		
+		String[] requiredKeys = new String[] {"run.id", "require1"};
+		validator.setRequiredKeys(requiredKeys);
+		
+		String[] optionalKeys = new String[] {"option1"};
+		validator.setOptionalKeys(optionalKeys);
+		
+		validator.afterPropertiesSet();
+		
+		return validator;
+	}
+    
+    @Bean
+    JobParametersValidator compositeValidator() {
+    	List<JobParametersValidator> validators = new ArrayList<>();
+    	validators.add(defaultValidator());
+    	validators.add(new RequiredValidator());
+    	validators.add(new OptionalValidator());
+    	
+    	CompositeJobParametersValidator compositeValidator = new CompositeJobParametersValidator();
+    	compositeValidator.setValidators(validators);
+    	
+    	return compositeValidator;
+    }
+	
+	@Bean
+	Step taskletStep1(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+		return new StepBuilder("HelloTaskletStep1", jobRepository)
+				.tasklet(helloTasklet, transactionManager)
+				.build();
+	}
+	
+	@Bean
+	Step taskletStep2(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+		return new StepBuilder("HelloTaskletStep2", jobRepository)
+				.tasklet(helloTasklet2, transactionManager)
+				.build();
+	}
+	
+	@Bean
+	Job taskletJob(JobRepository jobRepository, 
+			PlatformTransactionManager transactionManager, 
+		    Step taskletStep1, 
+		    Step taskletStep2) throws Exception{
+		return new JobBuilder("HelloWorldTaskletJob", jobRepository)
+				.incrementer(new RunIdIncrementer())
+				.start(taskletStep1)
+				.next(taskletStep2)
+				.validator(compositeValidator())
+				.build();
+	}	
+}

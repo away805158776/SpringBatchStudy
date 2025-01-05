@@ -1,0 +1,6 @@
+com\example\demo\BatchHelloWorldTaskletApplication.class
+com\example\demo\tasklet\HelloTasklet2.class
+com\example\demo\tasklet\HelloTasklet.class
+com\example\demo\validator\RequiredValidator.class
+com\example\demo\config\BatchConfig.class
+com\example\demo\validator\OptionalValidator.class

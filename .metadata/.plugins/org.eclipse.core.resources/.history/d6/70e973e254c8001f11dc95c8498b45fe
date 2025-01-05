@@ -1,0 +1,21 @@
+package com.example.demo.listener;
+
+@Component
+@Slf4j
+public class WriteListener implements ItemWriteListener<Employee> {
+	
+	@Override
+	public void beforewrite(List<? extends Employee> items) {
+		//Do nothing
+	}
+	
+	@Override
+	public void afterWrite(List<? extends Employee> items) {
+		log.debug("AfterWrite: count={}", items.size());
+	}
+	
+	@Override
+	public void onWrite(Exception exception, List<? extends Employee> items) {
+		log.error("WriteError: errorMessage={}", exception.getMessage(), exceptionO);
+	}
+}
