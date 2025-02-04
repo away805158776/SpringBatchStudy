@@ -10,10 +10,12 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemReader;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.batch.BatchDataSource;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -58,6 +60,10 @@ public class BatchConfig {
 	          .build();
 	  }
 	
+	@Autowired
+	@Qualifier("JpaWriter")
+	private ItemWriter<Employee> jpaWriter;
+	
 	private static final String INSERT_EMPLOYEE_SQL = "INSERT INTO employee(id, name, age, gender)" + "VALUES(:id, :name, :age, :gender)";
 	
 	@Bean
@@ -76,7 +82,7 @@ public class BatchConfig {
 		return new StepBuilder("InMemoryStep", jobRepository)
 				.<Employee, Employee>chunk(1, transactionManager)
 				.reader(employeeReader)
-				.writer(jdbcWriter())
+				.writer(jpaWriter)
 				.build();
 	}
 	

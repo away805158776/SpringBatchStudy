@@ -13,7 +13,13 @@ spring:
       username : spring
       password : password
       driverClassName : org.postgresql.Driver		
+  jpa:
+    hibernate:
+      ddl-auto: none
 
 logging:
   level:
     '[com.example.demo]': debug
+    '[org.hibernate.SQL]': debug
+    '[org.hibernate.type.descriptor.sql.BasicBinder]': trace
+    '[org.hibernate.type.EnumType]': trace

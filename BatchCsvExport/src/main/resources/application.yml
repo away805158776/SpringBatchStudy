@@ -6,7 +6,8 @@ spring:
       # name: ExportMybatisCursorJob
       # name: ExportMybatisPagingJob
       # name: ExportJpaCursorJob
-      name: ExportJpaPagingJob
+      # name: ExportJpaPagingJob
+      name: ExportParallelJob
     jdbc:
       initialize-schema: always
       schema: classpath:org/springframework/batch/core/schema-postgresql.sql

@@ -1,9 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="org.springframework.batch.repeat.RepeatStatus"/>
-    <fullyQualifiedTypeName name="org.springframework.batch.core.Job"/>
     <fullyQualifiedTypeName name="org.springframework.batch.core.configuration.annotation.JobScope"/>
     <fullyQualifiedTypeName name="org.springframework.batch.core.configuration.annotation.StepScope"/>
     <fullyQualifiedTypeName name="org.springframework.batch.item.ParseException"/>
+    <fullyQualifiedTypeName name="java.io.File"/>
+    <fullyQualifiedTypeName name="java.io.Writer"/>
+    <fullyQualifiedTypeName name="org.springframework.batch.item.file.transform.DelimitedLineAggregator"/>
+    <fullyQualifiedTypeName name="org.springframework.batch.item.file.transform.DelimitedLineTokenizer"/>
+    <fullyQualifiedTypeName name="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor"/>
+    <fullyQualifiedTypeName name="org.springframework.core.io.Resource"/>
+    <fullyQualifiedTypeName name="org.springframework.jdbc.core.RowMapper"/>
+    <fullyQualifiedTypeName name="org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean"/>
+    <fullyQualifiedTypeName name="jakarta.persistence.Id"/>
+    <fullyQualifiedTypeName name="jakarta.persistence.Transient"/>
+    <fullyQualifiedTypeName name="com.example.demo.domain.model.Employee"/>
+    <fullyQualifiedTypeName name="org.springframework.batch.item.database.orm.JpaNativeQueryProvider"/>
+    <fullyQualifiedTypeName name="java.util.Map"/>
+    <fullyQualifiedTypeName name="java.lang.Integer"/>
+    <fullyQualifiedTypeName name="org.springframework.batch.repeat.RepeatStatus"/>
+    <fullyQualifiedTypeName name="org.springframework.batch.core.Job"/>
     <fullyQualifiedTypeName name="org.springframework.batch.item.Chunk"/>
+    <fullyQualifiedTypeName name="org.springframework.beans.factory.annotation.Value"/>
+    <fullyQualifiedTypeName name="org.springframework.batch.core.ExitStatus"/>
+    <fullyQualifiedTypeName name="java.util.Random"/>
+    <fullyQualifiedTypeName name="org.springframework.batch.item.ExecutionContext"/>
+    <fullyQualifiedTypeName name="org.springframework.batch.core.repository.persistence.StepExecution"/>
+    <fullyQualifiedTypeName name="org.springframework.batch.core.JobExecution"/>
+    <fullyQualifiedTypeName name="org.springframework.batch.core.job.flow.FlowExecutionStatus"/>
 </qualifiedTypeNameHistroy>
