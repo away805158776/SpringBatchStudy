@@ -5,3 +5,5 @@ SpringBatchStudy
 --
 0119 update 次は　InMemoryのjdbc以外の方法でInMemoryDBを書く。  
 InMemoryＤＢの難問は解けた、二つのdatasourceを定義した。jdbcで一つのpostgreのDBにデータ更新できた。
+--
+0205 update 次は　テストの章を練習する  
