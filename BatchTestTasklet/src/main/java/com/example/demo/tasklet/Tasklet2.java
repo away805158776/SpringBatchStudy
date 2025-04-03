@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component("Tasklet2")
 @StepScope
 @Slf4j
-public class tasklet2 implements Tasklet {
+public class Tasklet2 implements Tasklet {
 	
 	@Autowired
 	private SampleComponent component;

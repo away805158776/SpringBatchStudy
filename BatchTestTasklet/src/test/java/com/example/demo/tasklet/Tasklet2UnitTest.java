@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 public class Tasklet2UnitTest {
 	
 	@InjectMocks
-	private tasklet2 tasklet2;
+	private Tasklet2 tasklet2;
 	
 	@Mock
 	private SampleComponent component;
