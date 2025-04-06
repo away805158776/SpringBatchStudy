@@ -19,7 +19,7 @@ import com.example.demo.domain.model.Employee;
 public class SkipImportBatchConfig extends BaseConfig {
 	
 	@Autowired
-	private SkipListener<Employee, Employee> employeeSkipListner;
+	private SkipListener<Employee, Employee> employeeSkipListener;
 	
 	@Autowired
 	private MyBatisBatchItemWriter<Employee> mybatisWriter;
@@ -34,7 +34,7 @@ public class SkipImportBatchConfig extends BaseConfig {
 				.faultTolerant()
 				.skipLimit(Integer.MAX_VALUE)
 				.skip(RuntimeException.class)
-				.listener(this.employeeSkipListner)
+				.listener(this.employeeSkipListener)
 				.build();
 	}
 	
