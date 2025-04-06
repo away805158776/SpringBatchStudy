@@ -56,7 +56,8 @@ public class JdbcCursorBatchConfig extends BaseConfig {
 				.build();
 	}
 	
-	@Bean("JdbcCursorJob")
+//	@Bean("JdbcCursorJob")
+	@Bean("ExportJdbcCursorJob")
 	Job exportJdbcCursorJob(JobRepository jobRepository, PlatformTransactionManager transactionManager, Step exportJdbcCursorStep) throws Exception{
 		return new JobBuilder("ExportJdbcCursorJob", jobRepository)
 				.incrementer(new RunIdIncrementer())
