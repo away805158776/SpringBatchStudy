@@ -50,12 +50,13 @@ public class JdbcImportBatchConfig extends BaseConfig {
 				.build();
 	}
 	
-	@Bean("JdbcJob")
+	//@Bean("JdbcJob")
+	//ここが本の内容と違って、JobのBeanの名前を定義する、インポートの結合テストで使う。
+	@Bean("CsvImportJdbcJob")
 	Job csvImportJdbcJob(JobRepository jobRepository, PlatformTransactionManager transactionManager, Step csvImportJdbcStep) {
 		return new JobBuilder("CsvImportJdbcJob", jobRepository)
 				.incrementer(new RunIdIncrementer())
 				.start(csvImportJdbcStep)
 				.build();
 	}
-
 }

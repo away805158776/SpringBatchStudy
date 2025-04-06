@@ -1,8 +1,8 @@
 spring:
  batch:
   job:
-   name: ExportJdbcCursorJob
-   # enabled: false
+   enabled: false
+   name: CsvImportJdbcJob
   jdbc:
    initialize-schema: always
    schema: classpath:org/springframework/batch/core/schema-h2.sql
@@ -16,12 +16,12 @@ spring:
    schema-locations: classpath:schema.sql
  jpa:
   hibernate:
-   ddl-auto: none	
+   ddl-auto: none
 
 logging:
  level:
-  '[com.example.demo]': debug	
+  '[com.example.demo]': debug
 
 mybatis:
  mapper-locations: classpath*:/mapper/postgres/*.xml
- type-aliases-package: com.example.demo.domain.model
+# type-aliases-package: com.example.demo.domain.model

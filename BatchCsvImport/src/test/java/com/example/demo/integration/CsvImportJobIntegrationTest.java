@@ -7,40 +7,42 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.batch.core.ExitStatus;
+import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.batch.test.context.SpringBatchTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 
 import com.example.demo.BatchCsvImportApplication;
 import com.example.demo.domain.model.Employee;
 
 @SpringBatchTest
 @ContextConfiguration(classes = {BatchCsvImportApplication.class})
-//@SpringBootTest(classes = BatchCsvImportApplication.class)
-//@ContextConfiguration(classes = {
-//		SkipImportBatchConfig.class,     
-//		MyBatisImportBatchConfig.class, // mybatisWriterを提供
-//	    GenderConvertProcessor.class,   // genderConvertProcessorを提供
-//	    ExistsCheckProcessor.class,      // existsCheckProcessorを提供
-//	    ReadListener.class,
-//	    ProcessListener.class,
-//	    WriteListener.class,
-//	    SampleProperty.class,
-//	    EmployeeSkipListener.class,
-//	    MyBatisImportBatchConfig.class
-//})
+
+/**
+ *なぜかapplication.ymlが読み込みがうまく、spring.batch.job.enabled=falseを読み取れないので、
+ *こちらでアノテーションとして設定します。
+ *Job name must be specified in case of multiple jobsを解決するために。
+ */
+@TestPropertySource(properties = {"spring.batch.job.enabled=false"})
+
 @DisplayName("CsvImportJobのIntegrationTest")
 public class CsvImportJobIntegrationTest {
 	
 	@Autowired
 	private JobLauncherTestUtils jobLauncherTestUtils;
+	
+	@Autowired
+	@Qualifier("CsvImportJdbcJob")
+	private Job csvImportJdbcJob;
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -52,13 +54,13 @@ public class CsvImportJobIntegrationTest {
 	@Test
 	@DisplayName("ユーザーがインポートされていること")
 	public void jobTest() throws Exception {
-		JobExecution jobExecution = jobLauncherTestUtils.launchJob();
+
+		jobLauncherTestUtils.setJob(csvImportJdbcJob);
+	        
+		JobParameters jobParameters = new JobParametersBuilder().addLong("time", System.currentTimeMillis()).toJobParameters();
+	        
+		JobExecution jobExecution = jobLauncherTestUtils.launchJob(jobParameters);
 		
-//        JobParameters jobParameters = new JobParametersBuilder()
-//                .addLong("time", System.currentTimeMillis()) // ユニークなパラメータ
-//                .toJobParameters();
-//        
-//        JobExecution jobExecution = jobLauncherTestUtils.launchJob(jobParameters);
 		
 		jobExecution.getStepExecutions().forEach(stepExecution -> assertThat(ExitStatus.COMPLETED).isEqualTo(stepExecution.getExitStatus()));
 		
