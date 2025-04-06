@@ -40,6 +40,7 @@ public class CsvImportJobIntegrationTest {
 	@Autowired
 	private JobLauncherTestUtils jobLauncherTestUtils;
 	
+	// here different from the book
 	@Autowired
 	@Qualifier("CsvImportJdbcJob")
 	private Job csvImportJdbcJob;
@@ -55,8 +56,8 @@ public class CsvImportJobIntegrationTest {
 	@DisplayName("ユーザーがインポートされていること")
 	public void jobTest() throws Exception {
 
+		// here different from the book
 		jobLauncherTestUtils.setJob(csvImportJdbcJob);
-	        
 		JobParameters jobParameters = new JobParametersBuilder().addLong("time", System.currentTimeMillis()).toJobParameters();
 	        
 		JobExecution jobExecution = jobLauncherTestUtils.launchJob(jobParameters);
