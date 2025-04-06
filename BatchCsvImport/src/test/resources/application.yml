@@ -1,8 +1,10 @@
 spring:
  batch:
   job:
+   # enabled: falseをここで機能したかったですが、なぜかこの設定が反映できず、CsvImportJobIntegrationTestで設定することになった。
+   # 下一行のenabled: falseを書いてるが、実は機能していない。
    enabled: false
-   name: CsvImportJdbcJob
+   # name: CsvImportJdbcJob
   jdbc:
    initialize-schema: always
    schema: classpath:org/springframework/batch/core/schema-h2.sql
